@@ -1,0 +1,228 @@
+{% comment %}
+  damn this  is good
+{% endcomment %}
+
+{% comment %} string {% endcomment %}
+{% assign myVariable = 'Hello Liquid' %}
+{{ myVariable }}
+
+<br>
+
+{% comment %} number {% endcomment %}
+{% assign number = 123 %}
+{{ number }}
+
+<br>
+
+{% comment %} boolean {% endcomment %}
+
+{% assign bolll = true %}
+{{ bolll }}
+
+<br>
+
+{% comment %} Array  (wont show anything unless spicfed in future) {% endcomment %}
+{% assign myArray = [1 , 2 , 3] %}
+{{ myArray }}
+
+<br>
+
+{% comment %} Objects {% endcomment %}
+<p>{{ product.title }}</p>
+
+{% comment %} Capture {% endcomment %}
+
+{% capture hhtml %}
+    <div>
+        <p>this is {{ product.title }} page</p>
+    </div>
+{% endcapture %}
+
+{{ hhtml }}
+
+{% comment %} IF condition {% endcomment %}
+
+{% assign var = 10 %}
+{% if var >= 10 %}
+  <p>var greater than 10</p>
+{% else %}
+  <p>NOPE</p>
+{% endif %}
+
+{% unless condition %}
+{% endunless %}
+
+{% comment %} case {% endcomment %}
+{% case product.type %}
+  {% when condition %}
+
+  {% else %}
+
+{% endcase %}
+
+{% comment %} For loop  {% endcomment %}
+{% for product in collection.products limit: 5 %}
+  <p
+    style="
+      {% if forloop.first %}
+        color: blue
+      {% elsif forloop.last %}
+        color: red
+      {% endif %}
+    "
+  >
+    {{ product.title }}
+  </p>
+  <h2>Tags</h2>
+  <ul>
+    {% if product.tags.size > 0 %}
+      {% for tag in product.tags %}
+        {% if tag == 'Sport' %}
+          {% continue %}
+        {% endif %}
+        <li>Product Index: {{ forloop.parentloop.index }} | Tag: {{ tag }}</li>
+      {% endfor %}
+    {% endif %}
+  </ul>
+{% else %}
+  <p>Nope nth</p>
+{% endfor %}
+
+{% comment %} Pagination {% endcomment %}
+{% paginate collection.products by 5 %}
+  {% for product in collection.products %}
+    <p>{{ product.title }}</p>
+  {% endfor %}
+
+  {{ paginate | default_pagination }}
+{% endpaginate %}
+
+{% comment %} FILTER {% endcomment %}
+
+{% assign myVar = 20 %}
+
+{% assign newVar = myVar | plus: 5 %}
+
+{{ newVar }}
+
+{% comment %} Filter mod {% endcomment %}
+
+{% assign modulonumy = 3 | modulo: 2 %}
+
+{% if modulonumy == 0 %}
+  <p>its even</p>
+{% else %}
+  <p>its odd</p>
+{% endif %}
+
+{% assign myCapValue = 90 %}
+<p>
+  {{ myCapValue | at_least: 80 }}
+</p>
+
+{% assign mySTring = 'hola' %}
+<p>{{ mySTring | upcase }}</p>
+
+{% assign mySTring = 'hola' %}
+<p>{{ mySTring | append: 'some extra text' }}</p>
+
+{% comment %} assign new line in text  {% endcomment %}
+
+{% assign mymultipleline = 'this is new line 111
+secondline 
+thirdline' | newline_to_br %}
+
+{{ mymultipleline }}
+
+{% comment %} FILTER BEGINS {% endcomment %}
+
+{% assign myNumbers = '1 , 2 , 3, 4' | split: ',' %}
+
+{% for number in myNumbers %}
+  <p>{{ number }}</p>
+{% endfor %}
+
+{% assign languages = 'html|orange , css|blue , JS|yellow' | split: ',' %}
+
+{% for language in languages %}
+  {% assign languageName = language | split: '|' | first %}
+  {% assign languageColor = language | split: '|' | last %}
+
+  <p style="color : {{languageColor}}">{{ languageName }}</p>
+{% endfor %}
+
+{% comment %} MAP {% endcomment %}
+{% comment %}
+  {% assign products = collection.products %}
+  {% assign productTitles = products | map: 'title' %}
+
+  {{ productTitles }}
+
+  {% for productTitle in productTitles %}
+    <p>{{ productTitle }}</p>
+  {% endfor %}
+
+  <p>{{ productTitle |  join: ' - '  }}</p>
+{% endcomment %}
+{% comment %}
+  {{ 'productTitles | STH' }}
+  <p>{{ productTitles |  first }}</p>
+  <p>{{ productTitles |  last }}</p>
+  <p>{{ productTitles |  size }}</p>
+{% endcomment %}
+
+{% assign products = collection.products %}
+{% assign productTitles = products | map: 'title' %}
+
+{{ productTitles | join: ' - ' }}
+
+{% assign priceSortedItem = products | sort: 'price' %}
+
+{% for product in priceSortedItem %}
+  <p>{{ product.title }} - {{ product.price | money }}</p>
+{% endfor %}
+
+
+{% assign snoboard = products |  where: 'title','Gift Card' |  first  %}
+
+<p>{{ snoboard.title }} - {{ snoboard.price }}</p>
+
+
+{% comment %} tags extractor {% endcomment %}
+
+{% assign tags = '' %}
+
+{% for product in products %}
+  {% for tag in product.tags %}
+    {% assign tags = tags |  append: tag | append: '  ' %}
+  {% endfor %}
+{% endfor %}
+
+<p>{{ tags |  split: '  ' | uniq | join : ' '}}</p>
+
+
+{% comment %} JSON FILTER {% endcomment %}
+
+<p>{{ collection.description | default: 'if no value is to show then show this' }}</p>
+
+{% comment %} Embedding CSS FROM ASSETS FOLDER {% endcomment %}
+
+{{ 'tutorialCSS.css' |  asset_url|  stylesheet_tag }}
+
+{% comment %} creates a class embeedded called highlight as shown below  {% endcomment %}
+<p>{{ 'Just highlight the word highlight' | highlight: 'highlight' }}</p>
+
+
+{% comment %} year month and date has to be ruby format {% endcomment %}
+
+<p>Copyrights {{ 'now' | date: '%Y' }}</p>
+
+
+{% comment %} use of assets folder  {% endcomment %}
+
+{% comment %} debugging {% endcomment %}
+
+
+<p>{{ collection.products.first |  json }}</p>
+
+<script>console.log({{ collection.products.first |  json  }})</script>

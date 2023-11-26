@@ -35,7 +35,6 @@
       <script src="{{ 'animations.js' | asset_url }}" defer="defer"></script>
     {%- endif -%}
 
-    <h4> OKeh yo is it working ?? from git now ???</h4>
     {{ content_for_header }}
 
     {%- liquid
@@ -284,6 +283,8 @@
   </head>
 
   <body class="gradient{% if settings.animations_hover_elements != 'none' %} animate--hover-{{ settings.animations_hover_elements }}{% endif %}">
+    {% render 'tutorial' %}
+
     <a class="skip-to-content-link button visually-hidden" href="#MainContent">
       {{ 'accessibility.skip_to_text' | t }}
     </a>
